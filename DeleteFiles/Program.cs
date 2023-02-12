@@ -8,8 +8,15 @@ namespace DeleteFiles
     {
         static void Main(string[] args)
         {
-            string deleteDir = @"C:\Delete\";
-            string keepDir = @"C:\Keep\";
+            Console.WriteLine("This program compares two directories, and it will delete " +
+                "files that exist in both directories from the path of files to delete.");
+            Console.WriteLine("-----------------------------------------------------");
+            Console.WriteLine("Path to files to possibly Delete...");
+            string deleteDir = Console.ReadLine();
+            //string deleteDir = @"C:\Delete\";
+            Console.WriteLine("Path to files to Keep...");
+            string keepDir = Console.ReadLine();
+            //string keepDir = @"C:\Keep\";
 
             string[] checkFiles = Directory.GetFiles(deleteDir, "*" ,SearchOption.AllDirectories);
             string[] doneFiles = Directory.GetFiles(keepDir, "*", SearchOption.AllDirectories);
@@ -28,6 +35,7 @@ namespace DeleteFiles
                 }
             }
             Thread.Sleep(5000);
+            Console.WriteLine("Cleanup Done...");
             Console.ReadLine();
 
         }
