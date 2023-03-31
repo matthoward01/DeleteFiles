@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace DeleteFiles
@@ -12,10 +13,10 @@ namespace DeleteFiles
                 "files that exist in both directories from the path of files to delete.");
             Console.WriteLine("-----------------------------------------------------");
             Console.WriteLine("Path to files to possibly Delete...");
-            string deleteDir = Console.ReadLine();
+            string deleteDir = Console.ReadLine().Replace("\"", "");
             //string deleteDir = @"C:\Delete\";
             Console.WriteLine("Path to files to Keep...");
-            string keepDir = Console.ReadLine();
+            string keepDir = Console.ReadLine().Replace("\"", "");
             Console.WriteLine("Delete if doesnt Exist (y/n) Default(n)");
             string doesntExistString = Console.ReadLine();
             bool doesntExist = false;
@@ -25,16 +26,16 @@ namespace DeleteFiles
             }
             //string keepDir = @"C:\Keep\";
 
-            string[] checkFiles = Directory.GetFiles(deleteDir, "*" ,SearchOption.AllDirectories);
+            string[] checkFiles = Directory.GetFiles(deleteDir, "*", SearchOption.AllDirectories);
             string[] doneFiles = Directory.GetFiles(keepDir, "*", SearchOption.AllDirectories);
 
-
-            foreach (string s in checkFiles)
+            if (!doesntExist)
             {
-                for (int i = 0; i < doneFiles.Length; i++)
+                foreach (string s in checkFiles)
                 {
-                    if (!doesntExist)
+                    for (int i = 0; i < doneFiles.Length; i++)
                     {
+
                         if (Path.GetFileNameWithoutExtension(doneFiles[i]) == Path.GetFileNameWithoutExtension(s))
                         {
                             Console.WriteLine("Found - " + doneFiles[i]);
@@ -42,14 +43,18 @@ namespace DeleteFiles
                             File.Delete(s);
                         }
                     }
-                    else
+                }
+            }
+            else
+            { 
+                foreach (string s in checkFiles)
+                {
+                    int index = doneFiles.ToList().FindIndex(c => Path.GetFileNameWithoutExtension(c).Equals(Path.GetFileNameWithoutExtension(s)));
+                    if (index == -1)
                     {
-                        if (Path.GetFileNameWithoutExtension(doneFiles[i]) != Path.GetFileNameWithoutExtension(s))
-                        {
-                            Console.WriteLine("Not Found - " + doneFiles[i]);
-                            Console.WriteLine("Deleting - " + s);
-                            File.Delete(s);
-                        }
+                        Console.WriteLine("Not Found - " + Path.GetFileNameWithoutExtension(s));
+                        Console.WriteLine("Deleting - " + s);
+                        File.Delete(s);
                     }
                 }
             }
