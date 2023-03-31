@@ -16,6 +16,13 @@ namespace DeleteFiles
             //string deleteDir = @"C:\Delete\";
             Console.WriteLine("Path to files to Keep...");
             string keepDir = Console.ReadLine();
+            Console.WriteLine("Delete if doesnt Exist (y/n) Default(n)");
+            string doesntExistString = Console.ReadLine();
+            bool doesntExist = false;
+            if (doesntExistString.ToLower().Trim().Equals("y"))
+            {
+                doesntExist = true;
+            }
             //string keepDir = @"C:\Keep\";
 
             string[] checkFiles = Directory.GetFiles(deleteDir, "*" ,SearchOption.AllDirectories);
@@ -26,11 +33,23 @@ namespace DeleteFiles
             {
                 for (int i = 0; i < doneFiles.Length; i++)
                 {
-                    if (Path.GetFileNameWithoutExtension(doneFiles[i]) == Path.GetFileNameWithoutExtension(s))
+                    if (!doesntExist)
                     {
-                        Console.WriteLine("Found - " + doneFiles[i]);
-                        Console.WriteLine("Deleting - " + s);
-                        File.Delete(s);
+                        if (Path.GetFileNameWithoutExtension(doneFiles[i]) == Path.GetFileNameWithoutExtension(s))
+                        {
+                            Console.WriteLine("Found - " + doneFiles[i]);
+                            Console.WriteLine("Deleting - " + s);
+                            File.Delete(s);
+                        }
+                    }
+                    else
+                    {
+                        if (Path.GetFileNameWithoutExtension(doneFiles[i]) != Path.GetFileNameWithoutExtension(s))
+                        {
+                            Console.WriteLine("Not Found - " + doneFiles[i]);
+                            Console.WriteLine("Deleting - " + s);
+                            File.Delete(s);
+                        }
                     }
                 }
             }
